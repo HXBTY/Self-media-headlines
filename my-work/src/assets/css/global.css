@@ -6,6 +6,32 @@ body,
   padding: 0;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 a {
   text-decoration: none;
+}
+
+ul, li {
+  list-style: none;
+}
+
+.left {
+  width: 110px;
+  float: left;
+  margin-right: 30px;
+}
+
+.content {
+  float: left;
+  width: 660px;
+}
+
+.right {
+  width: 340px;
+  float: right;
+  margin-right: 3px;
 }
