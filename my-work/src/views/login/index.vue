@@ -14,16 +14,16 @@
           style="background-color: #d9d9d9; height: 1px; border: none; margin: 13px 0;"
         />
         <!-- prop: 必须属性, 使得校验规则与当前项目表单联系起来, 属性值必须是表单对象的成员名称 -->
-        <el-form-item prop="mobile">
+        <el-form-item prop="phone">
           <el-input
-            v-model="loginForm.mobile"
+            v-model="loginForm.phone"
             placeholder="请输入手机号码"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="code">
+        <el-form-item prop="yz_code">
           <el-button>获取验证码</el-button>
           <el-input
-            v-model="loginForm.code"
+            v-model="loginForm.yz_code"
             placeholder="请输入校验码"
             style="width: 190px; padding-left: 5px;"
           ></el-input>
@@ -48,35 +48,58 @@
 <script>
 export default {
   // 注意：属性绑定、双向数据绑定的值需要通过data做支持
-  data () {
+  data() {
     return {
       loginForm: {
-        mobile: '', // 手机号码
-        code: '', // 校验码
-        xieyi: false // 协议
+        phone: "13234721566", // 手机号码
+        yz_code: "1234" // 校验码
       },
       loginFormRules: {
-        mobile: [
-          { required: true, message: '手机号码必填' },
-          { pattern: /^1[35789]\d{9}$/, message: '手机号码格式不对' }
+        phone: [
+          { required: true, message: "手机号码必填" },
+          { pattern: /^1[35789]\d{9}$/, message: "手机号码格式不对" }
         ],
-        code: [{ required: true, message: '验证码必填' }]
+        yz_code: [{ required: true, message: "验证码必填" }]
       }
-    }
+    };
   },
   methods: {
     // 登录系统
-    login () {
+    login() {
       // 在点击确定后, 获取登录表单的所有内容校验内容是否正确
       this.$refs.loginFormRef.validate((valid, obj) => {
         // validate用于表单校验, 若是通过, 则返回连个参数: 布尔值和校验规则
         if (valid) {
-          this.$router.push({ name: 'home' })
+          const pro = this.$http.post("/login", this.loginForm);
+          pro
+            .then(result => {
+              if (result.data.status === 0) {
+                // 将后端发送过来的用户信息添加到localStorage中
+                window.localStorage.setItem(
+                  "userinfo",
+                  JSON.stringify(result.data.data)
+                );
+                this.$router.push({ name: "home" });
+              } else {
+                return this.$message({
+                  type: "error",
+                  message: "用户名或密码错误:" + result.data.message,
+                  duration: 3000
+                });
+              }
+            })
+            .catch(err => {
+              return this.$message({
+                type: "error",
+                message: "用户名或密码错误:" + err,
+                duration: 3000
+              });
+            });
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
