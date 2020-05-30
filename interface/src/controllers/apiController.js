@@ -57,7 +57,7 @@ exports.login = (req, res) => {
   });
 };
 
-// 获取新闻列表页
+// 获取新闻列表
 exports.newslist = (req, res) => {
   let { type, total } = req.query;
   function search(sqlStr) {
@@ -86,40 +86,85 @@ exports.newslist = (req, res) => {
   }
 };
 
-var img_url_name = "";
-// 新增新闻图片地址获取
-exports.newsadd_imgname = (req, res) => {
-  let url = "http://localhost:8888/news_img/" + req.file.filename;
-  url = `'${url}'`;
-  img_url_name = url;
-};
-
-// 新增新闻
-exports.newsadd = (req, res) => {
-  // console.log(img_url_name)
+// 获取新闻类型
+exports.newsType = (req, res) => {
+  let sql = `select * from news_type`;
   let resObj = { status: successStatus, message: "" };
-  let { title, news, type, pubdate } = req.body;
-  title = `'${title}'`;
-  news = `'${news}'`;
-  // news = news.replace('<p>', '')
-  // news = news.replace('</p>', '')
-  // console.log(title)
-  if (img_url_name === "") {
-    var sql = `insert into news_list (title,news,type,pubdate,status) values(${title},${news},${type},${pubdate},'0')`;
-  } else {
-    var sql = `insert into news_list (title,news,type,pubdate,status,image) values(${title},${news},${type},${pubdate},'0',${img_url_name})`;
-  }
   con.query(sql, (err, data) => {
     if (err) {
       resObj.status = failStatus;
       resObj.message = err.message;
       res.end(JSON.stringify(resObj));
+      return;
     } else {
-      resObj.message = "新闻新增成功！";
+      resObj.message = "获取新闻列表成功!";
+      Object.assign(resObj, { data });
       res.end(JSON.stringify(resObj));
     }
   });
 };
+
+var img_url_name = "";
+// 新增新闻图片地址获取
+exports.newsadd_imgname = (req, res) => {
+  let resObj = { status: successStatus, message: "" };
+  let url = "http://localhost:8888/news_img/" + req.file.filename;
+  url = `'${url}'`;
+  img_url_name = url;
+  resObj.message = "图片上传成功";
+  let photo = url.replace(/'/g, "");
+  Object.assign(resObj, { photo });
+  res.end(JSON.stringify(resObj));
+};
+
+// 新增新闻
+exports.newsadd = (req, res) => {
+  // 获取表的长度
+  let length = `select * from news_list`;
+  let id = "";
+  let resObj = { status: successStatus, message: "" };
+  let { title, news, type_id, image } = req.body;
+  let { pubdate, author } = req.query;
+
+  con.query(length, (err, data) => {
+    if (err) {
+      resObj.status = failStatus;
+      resObj.message = err.message;
+      res.end(JSON.stringify(resObj));
+    } else {
+      id = data.length + 2;
+
+      // 之所以添加引号是因为数据
+      title = `'${title}'`;
+      news = news.replace(/<.*?>/gi, "");
+      news = `'${news}'`;
+      pubdate = `'${pubdate}'`;
+      type_id = `'${type_id}'`;
+      author = `'${author}'`;
+      id = `'${id}'`;
+
+      if (image === "") {
+        var sql = `insert into news_list (title,news,type_id,pubdate,author,id) values(${title},${news},${type_id},${pubdate},${author},${id})`;
+      } else {
+        image = `'${image}'`;
+        var sql = `insert into news_list (title,news,type_id,pubdate,image,author,id) values(${title},${news},${type_id},${pubdate},${image},${author},${id})`;
+      }
+      con.query(sql, (err, data) => {
+        if (err) {
+          resObj.status = failStatus;
+          resObj.message = err.message;
+          res.end(JSON.stringify(resObj));
+        } else {
+          resObj.message = "新闻新增成功！";
+          res.end(JSON.stringify(resObj));
+        }
+      });
+    }
+  });
+};
+
+// 获取自己的新闻信息
+
 
 // 删除新闻
 exports.newsdel = (req, res) => {

@@ -2,7 +2,7 @@
   <div id="home">
     <div class="left">
       <a>
-        <img src="./images/logo-home.gif" alt="" style="width: 110px;" />
+        <img src="../../assets/images/logo-home.gif" alt="" style="width: 110px;" />
       </a>
       <ul>
         <li>
@@ -70,9 +70,9 @@
           <el-button type="text" @click="login_out()">退出登录</el-button>
         </p>
         <div class="user">
-          <a href="###">
+          <a>
             <img
-              src="./images/one_punch_r2.png"
+              src="../../assets/images/one_punch_r2.png"
               class="head"
               @click="userPage()"
             />
@@ -116,7 +116,7 @@
           <li class="new_item">
             <a class="hot_new">
               <img
-                src="./images/hot_new01.jpg"
+                src="../../assets/images/hot_new01.jpg"
                 width="60"
                 style="vertical-align: top;"
               />
@@ -128,7 +128,7 @@
           <li class="new_item">
             <a class="hot_new">
               <img
-                src="./images/hot_new02.jpg"
+                src="../../assets/images/hot_new02.jpg"
                 width="60"
                 style="vertical-align: top;"
               />
@@ -142,7 +142,7 @@
           <li class="new_item">
             <a class="hot_new">
               <img
-                src="./images/hot_new03.jpg"
+                src="../../assets/images/hot_new03.jpg"
                 width="60"
                 style="vertical-align: top;"
               />
@@ -154,7 +154,7 @@
           <li class="new_item no_bottom">
             <a class="hot_new">
               <img
-                src="./images/hot_new04.jpg"
+                src="../../assets/images/hot_new04.jpg"
                 width="60"
                 style="vertical-align: top;"
               />
@@ -169,40 +169,40 @@
         <div class="more">更多</div>
         <ul>
           <li class="item">
-            <a href="###">关于头条</a>
+            <a>关于头条</a>
           </li>
           <li class="item">
-            <a href="###">加入头条</a>
+            <a>加入头条</a>
           </li>
           <li class="item">
-            <a href="###">媒体报道</a>
+            <a>媒体报道</a>
           </li>
           <li class="item">
-            <a href="###">媒体合作</a>
+            <a>媒体合作</a>
           </li>
           <li class="item">
-            <a href="###">产品合作</a>
+            <a>产品合作</a>
           </li>
           <li class="item">
-            <a href="###">合作说明</a>
+            <a>合作说明</a>
           </li>
           <li class="item">
-            <a href="###">广告投放</a>
+            <a>广告投放</a>
           </li>
           <li class="item">
-            <a href="###">联系我们</a>
+            <a>联系我们</a>
           </li>
           <li class="item">
-            <a href="###">用户协议</a>
+            <a>用户协议</a>
           </li>
           <li class="item">
-            <a href="###">隐私策略</a>
+            <a>隐私策略</a>
           </li>
           <li class="item">
-            <a href="###">侵权投诉</a>
+            <a>侵权投诉</a>
           </li>
           <li class="item">
-            <a href="###">廉洁举报</a>
+            <a>廉洁举报</a>
           </li>
         </ul>
       </div>
@@ -293,7 +293,7 @@ export default {
   computed: {
     user_name() {
       let name = "";
-      if (JSON.parse(window.localStorage.getItem("userinfo"))) {
+      if (window.localStorage.getItem("userinfo")) {
         name = JSON.parse(window.localStorage.getItem("userinfo")).name;
       }
       return name;

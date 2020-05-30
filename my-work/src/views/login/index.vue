@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <img
-      src="./images/logo.gif"
+      src="../../assets/images/logo.gif"
       alt
       style="position: absolute; top: 0px; left: 0px; width: 220px;"
     />
@@ -31,8 +31,8 @@
         <el-form-item>
           <span>
             登录 / 注册即表示同意
-            <a href="###" style="color: #406599;">用户协议</a> 和
-            <a href="###" style="color: #406599;">隐私条款</a>
+            <a style="color: #406599;">用户协议</a> 和
+            <a style="color: #406599;">隐私条款</a>
           </span>
         </el-form-item>
         <el-form-item>
@@ -106,7 +106,7 @@ export default {
 .login-container {
   height: 100%;
   background-color: gray;
-  background-image: url("./images/login_bg.png");
+  background-image: url("../../assets/images/login_bg.png");
   display: flex;
   justify-content: center;
   align-items: center;
