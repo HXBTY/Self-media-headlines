@@ -1,6 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+// 用于重写push方法, 解决两次路由跳转同一个路由的问题(没有用到)
+const VueRouterPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(to) {
+  return VueRouterPush.call(this, to).catch(err => err);
+};
+
 Vue.use(VueRouter);
 
 const routes = [

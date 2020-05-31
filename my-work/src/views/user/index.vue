@@ -15,8 +15,6 @@
     <div class="body">
       <div class="left">
         <el-tabs type="border-card" class="newl_list">
-          <el-tab-pane label="关注">关注</el-tab-pane>
-          <el-tab-pane label="收藏">收藏</el-tab-pane>
           <el-tab-pane label="我的文章">
             <el-button
               type="primary"
@@ -24,12 +22,39 @@
               @click="write()"
             ></el-button>
             <hr style="padding: 8px; border: none;" />
-            <el-card class="box-card">
-              <div v-for="o in 4" :key="o" class="text item">
-                {{ "列表内容 " + o }}
+            <el-card class="box-card" v-for="item in my_newlist" :key="item.id">
+              <div class="text item">
+                <img
+                  :src="item.image"
+                  alt=""
+                  width="100"
+                  style="display: inline-block; vertical-align: middle;"
+                />
+                <div class="mylist">
+                  <span class="mylist_title">{{ item.title }}</span>
+                  <p class="mylist_conten">{{ item.news }}</p>
+                </div>
+              </div>
+              <div class="edit_delate">
+                <el-button
+                  type="primary"
+                  icon="el-icon-edit"
+                  v-model="item.id"
+                  circle
+                  @click.native="editNews(item.id)"
+                ></el-button>
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  v-model="item.id"
+                  circle
+                  @click.native="deleteNews(item.id)"
+                ></el-button>
               </div>
             </el-card>
           </el-tab-pane>
+          <el-tab-pane label="关注">关注</el-tab-pane>
+          <el-tab-pane label="收藏">收藏</el-tab-pane>
         </el-tabs>
       </div>
       <div class="right">
@@ -88,15 +113,43 @@ export default {
     // 展示my_newlist
     myNewList() {
       const pro = this.$http.get("/mynewslist", {
-        parmas: { author: this.user_name }
+        params: { author: this.user_name, total: 20 }
       });
       pro
         .then(result => {
-          console.log(result);
-          // this.my_newlist = result.data
+          this.my_newlist = result.data.data;
         })
         .catch(error => {
           return this.$message.error("请求数据失败：" + error);
+        });
+    },
+    editNews(data) {
+      // 因为直接输出的this.my_newlist是一个带有'__ob__: Observer'的数据, '__ob__: Observer'的产生是由于vue数据监控自动产生的, 因此有该属性是数据无法遍历, 因此需要通过JSON.parse(JSON.stringify())方法将其转变为原始数据对象
+      // console.log(JSON.parse(JSON.stringify(this.my_newlist)));
+      const myList = [];
+      JSON.parse(JSON.stringify(this.my_newlist)).forEach((ele, i) => {
+        if (ele.id === data) {
+          myList.push(ele);
+        }
+      });
+      this.$router.push({
+        name: "write",
+        params: { edit_list: myList }
+      });
+    },
+    deleteNews(data) {
+      const pro = this.$http.get("/newsdel", {
+        params: {
+          id: data
+        }
+      });
+      pro
+        .then(result => {
+          this.$message.success("删除成功");
+          this.myNewList();
+        })
+        .catch(error => {
+          return this.$message.error("删除失败" + error);
         });
     }
   },
@@ -170,6 +223,33 @@ export default {
 }
 
 .box-card {
+  position: relative;
   width: 670px;
+  .mylist {
+    width: 400px;
+    display: inline-block;
+    vertical-align: middle;
+    .mylist_title {
+      display: inline-block;
+      font-size: 20px;
+      font-weight: 700;
+      padding-left: 40px;
+      margin-bottom: 20px;
+    }
+    .mylist_conten {
+      text-indent: 2em; // 首行缩进
+      padding: 0 30px;
+      // 当文字超出当前部分, 显示省略号
+      display: -webkit-box; // 将块元素转变为弹性盒子
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2; // 控制行数
+      overflow: hidden;
+    }
+  }
+  .edit_delate {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+  }
 }
 </style>

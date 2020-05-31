@@ -6,6 +6,7 @@
         alt=""
         width="150"
         style="padding: 10px 10px;"
+        @click="go_home()"
       />
       <el-card class="box-card">
         <div slot="header" class="clearfix">
@@ -37,7 +38,7 @@
                 :http-request="upLoadPhoto"
                 :show-file-list="false"
                 class="uploader"
-                v-show="flag"
+                v-if="flag"
               >
                 <ul>
                   <li class="uploadbox">
@@ -83,6 +84,8 @@ export default {
   name: "ArticleAdd",
   data() {
     return {
+      // 路由传过来需要修改的数据
+      editList: [], // 需要修改的数据列表
       radio: "0",
       flag: false,
       channelList: [], // 接收新闻列表数据
@@ -108,7 +111,7 @@ export default {
       }
     };
   },
-  // 初测组件
+  // 注册组件
   components: {
     // 简易成员赋值 quillEditor: quillEditor
     // 组件使用两种方式：<quillEditor></quillEditor> 或 <quill-editor></quill-editor>
@@ -116,6 +119,8 @@ export default {
   },
   created() {
     this.getChannelList();
+    this.getquery();
+    this.valueBind();
   },
   methods: {
     // 获取新闻类型
@@ -139,21 +144,40 @@ export default {
           // 把被添加的文章信息通过axios传递给服务器端存储
           // axios发起post请求的时候，不仅可以传递post数据还可以传递get请求字符串信息
           // this.$http.post(地址,post数据,get请求字符串信息)
-          var pro = this.$http.post("/newsadd", this.addForm, {
-            params: {
-              pubdate: this.pubdate,
-              author: this.author
-            }
-          });
-          pro
-            .then(result => {
-              console.log(result);
-              this.$message.success("文章发布成功");
-              this.$router.push({ name: "home" });
-            })
-            .catch(err => {
-              return this.$message.error("发布文章失败" + err);
+          // 判断是否有id存在, 若存在,则视为修改数据
+          if (!this.addForm.id) {
+            var pro = this.$http.post("/newsadd", this.addForm, {
+              params: {
+                pubdate: this.pubdate,
+                author: this.author
+              }
             });
+            pro
+              .then(result => {
+                this.$message.success("文章发布成功");
+                this.$router.push({ name: "home" });
+              })
+              .catch(err => {
+                return this.$message.error("发布文章失败" + err);
+              });
+          } else {
+            if (this.radio === "0") {
+              this.addForm.image = "";
+            }
+            var prop = this.$http.post("/newsedit", this.addForm, {
+              params: {
+                pubdate: this.pubdate
+              }
+            });
+            prop
+              .then(result => {
+                this.$message.success("文章修改成功");
+                this.$router.push({ name: "user" });
+              })
+              .catch(err => {
+                return this.$message.error("发布修改失败" + err);
+              });
+          }
         }
       });
     },
@@ -172,6 +196,22 @@ export default {
         .catch(err => {
           return this.$message.error("图片上传失败：" + err);
         });
+    },
+    go_home() {
+      this.$router.push({ name: "home" });
+    },
+    // 获取路由跳转的数据
+    // 必须使用$route接收,$routee不能接收
+    getquery() {
+      const editList = this.$route.params.edit_list
+        ? this.$route.params.edit_list[0]
+        : [];
+      this.editList = editList;
+    },
+    // v-mode选择绑定
+    valueBind() {
+      this.addForm =
+        this.editList.constructor === Object ? this.editList : this.addForm;
     }
   },
   // 计算属性
@@ -183,6 +223,10 @@ export default {
     author() {
       return JSON.parse(window.localStorage.getItem("userinfo")).name;
     }
+  },
+  watch: {
+    // 监听路有变化
+    $route: "getquery"
   }
 };
 </script>

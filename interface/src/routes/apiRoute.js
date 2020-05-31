@@ -37,24 +37,12 @@ route.post(
 );
 
 // 获取自己的新闻
-route.get("/api/mynewslist", apiCtrl.newsdel);
-
-// 删除新闻
-route.get("/api/newsdel", apiCtrl.newsdel);
-
-// 获取新闻根据id
-route.get("/api/newsbyid", apiCtrl.newsbyid);
+route.get("/api/mynewslist", apiCtrl.mynewslist);
 
 // 修改新闻
 route.post("/api/newsedit", apiCtrl.newsedit);
 
-// 获取个人信息
-route.get("/api/account", apiCtrl.account);
-
-// 获取新闻类型数量
-route.get("/api/pie_type", apiCtrl.pie_type);
-
-// 获取新闻状态数量
-route.get("/api/pie_status", apiCtrl.pie_status);
+// 删除新闻
+route.get("/api/newsdel", apiCtrl.newsdel);
 
 module.exports = route;
