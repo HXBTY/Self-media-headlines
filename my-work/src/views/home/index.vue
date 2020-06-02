@@ -333,7 +333,6 @@ export default {
 // 中间区域
 .content {
   height: 100%;
-  background-color: pink;
   .news_title {
     display: inline-block;
     font-size: 20px;
@@ -367,7 +366,7 @@ export default {
   background: #fff;
   border: 20px solid #e8e8e8;
   width: 340px;
-  height: 180;
+  // height: 210px;
   margin-top: 15px;
   padding: 40px;
   box-sizing: border-box;
@@ -387,7 +386,7 @@ export default {
   background: #fff;
   border: 20px solid #e8e8e8;
   width: 340px;
-  height: 180;
+  // height: 180px;
   margin-top: 15px;
   box-sizing: border-box;
   margin-bottom: 15px;
@@ -473,7 +472,7 @@ export default {
 }
 
 .refresh {
-  width: 40;
+  width: 40px;
   height: 100px;
   position: fixed;
   bottom: -20px;

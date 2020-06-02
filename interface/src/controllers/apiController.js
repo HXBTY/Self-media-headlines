@@ -27,14 +27,6 @@ exports.login = (req, res) => {
       return;
     }
     if (data.length > 0) {
-      let str = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz23456789";
-      let token = "";
-      let refresh_token = "";
-      //以长度单位进行循环
-      for (let i = 0; i < 100; i++) {
-        token += str.charAt(Math.floor(Math.random() * str.length));
-        refresh_token += str.charAt(Math.floor(Math.random() * str.length));
-      }
       resObj.message = "登录成功!";
       Object.assign(resObj, {
         data: {
@@ -42,8 +34,6 @@ exports.login = (req, res) => {
           name: phone,
           identity: data[0].identity,
           photo: data[0].photo,
-          token,
-          refresh_token,
         },
       });
       res.end(JSON.stringify(resObj));

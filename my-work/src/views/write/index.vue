@@ -49,7 +49,7 @@
                 </ul>
               </el-upload>
             </el-form-item>
-            <el-form-item label="频道：" prop="type_id">
+            <el-form-item label="类型：" prop="type_id">
               <el-select
                 v-model="addForm.type_id"
                 placeholder="请选择"
@@ -107,7 +107,7 @@ export default {
           }
         ],
         news: [{ required: true, message: "内容必填" }],
-        type_id: [{ required: true, message: "频道必选" }]
+        type_id: [{ required: true, message: "类型必选" }]
       }
     };
   },

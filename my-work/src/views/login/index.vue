@@ -57,7 +57,7 @@ export default {
       loginFormRules: {
         phone: [
           { required: true, message: "手机号码必填" },
-          { pattern: /^1[35789]\d{9}$/, message: "手机号码格式不对" }
+          { pattern: /^1[356789]\d{9}$/, message: "手机号码格式不对" }
         ],
         yz_code: [{ required: true, message: "验证码必填" }]
       }
