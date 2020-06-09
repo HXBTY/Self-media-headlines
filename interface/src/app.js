@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const http = require("http");
 const fs = require("fs");
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser"); // 用于创建中间件
 let app = express();
 
 // 注册中间件

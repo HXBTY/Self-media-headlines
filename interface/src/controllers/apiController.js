@@ -30,7 +30,6 @@ exports.login = (req, res) => {
       resObj.message = "登录成功!";
       Object.assign(resObj, {
         data: {
-          id: Math.floor(Math.random() * 1000),
           name: phone,
           identity: data[0].identity,
           photo: data[0].photo,
@@ -92,13 +91,11 @@ exports.newsType = (req, res) => {
   });
 };
 
-var img_url_name = "";
 // 新增新闻图片地址获取
 exports.newsadd_imgname = (req, res) => {
   let resObj = { status: successStatus, message: "" };
   let url = "http://localhost:8888/news_img/" + req.file.filename;
   url = `'${url}'`;
-  img_url_name = url;
   resObj.message = "图片上传成功";
   let photo = url.replace(/'/g, "");
   Object.assign(resObj, { photo });
@@ -108,27 +105,27 @@ exports.newsadd_imgname = (req, res) => {
 // 新增新闻
 exports.newsadd = (req, res) => {
   // 获取表的长度
-  let length = `select * from news_list`;
+  let sql_length = `select * from news_list order by id DESC limit 1`;
   let id = "";
   let resObj = { status: successStatus, message: "" };
   let { title, news, type_id, image } = req.body;
   let { pubdate, author } = req.query;
-  con.query(length, (err, data) => {
+  con.query(sql_length, (err, data) => {
     if (err) {
       resObj.status = failStatus;
       resObj.message = err.message;
       res.end(JSON.stringify(resObj));
     } else {
-      id = data.length + 2;
-
+      // 数据表的最后一项的id加-即为新添加的新闻id
+      id = parseInt(data[0].id) + 1;
       // 之所以添加引号是因为数据
       title = `'${title}'`;
-      news = news.replace(/<.*?>/gi, "");
+      news = news.replace(/<.*?>/gi, ""); //去除新闻内容的标签
       news = `'${news}'`;
       pubdate = `'${pubdate}'`;
       type_id = `'${type_id}'`;
       author = `'${author}'`;
-      id = `'${id}'`;
+      // id = `'${id}'`;
       image = `'${image}'`;
       if (image === "") {
         var sql = `insert into news_list (title,news,type_id,pubdate,author,id) values(${title},${news},${type_id},${pubdate},${author},${id})`;
@@ -181,7 +178,7 @@ exports.mynewslist = (req, res) => {
 exports.newsedit = (req, res) => {
   let resObj = { status: successStatus, message: "" };
   let { title, news, type_id, author, image, id } = req.body;
-  let { pubdate } = req.query.pubdate;
+  let pubdate = req.query.pubdate;
   title = `'${title}'`;
   news = news.replace(/<.*?>/gi, "");
   news = `'${news}'`;

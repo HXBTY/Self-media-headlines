@@ -155,7 +155,7 @@ export default {
             pro
               .then(result => {
                 this.$message.success("文章发布成功");
-                this.$router.push({ name: "home" });
+                this.$router.push({ name: "user" });
               })
               .catch(err => {
                 return this.$message.error("发布文章失败" + err);
@@ -164,6 +164,7 @@ export default {
             if (this.radio === "0") {
               this.addForm.image = "";
             }
+            console.log(this.pubdate);
             var prop = this.$http.post("/newsedit", this.addForm, {
               params: {
                 pubdate: this.pubdate
